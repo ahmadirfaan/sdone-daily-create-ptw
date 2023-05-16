@@ -1,0 +1,39 @@
+<assembly>
+    <id>dist</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <!--Get the generated application jar-->
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>${project.artifactId}-${project.version}.jar</include>
+            </includes>
+        </fileSet>
+<!--        get application.properties, proto file and logback.xml-->
+        <fileSet>
+            <directory>${project.build.directory}/classes</directory>
+            <outputDirectory>/config</outputDirectory>
+            <includes>
+                <include>application.properties</include>
+                <include>*.proto</include>
+                <include>logback.xml</include>
+            </includes>
+        </fileSet>
+<!--        <fileSet>-->
+<!--            &lt;!&ndash;Get misc user files&ndash;&gt;-->
+<!--            <directory>${project.basedir}</directory>-->
+<!--            <outputDirectory>/</outputDirectory>-->
+<!--            <includes>-->
+<!--                <include>README*</include>-->
+<!--                <include>LICENSE*</include>-->
+<!--                <include>NOTICE*</include>-->
+<!--            </includes>-->
+<!--        </fileSet>-->
+    </fileSets>
+</assembly>
