@@ -1,6 +1,9 @@
 package com.sdone.createdailyptw.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sdone.createdailyptw.entity.ApprovalData;
+import com.sdone.createdailyptw.entity.WizardStatusEnum;
+import com.sdone.createdailyptw.exception.BadRequestException;
 import com.sdone.createdailyptw.grpc.client.TokenValidatorServiceClient;
 import com.sdone.createdailyptw.model.CreateDailyPtw;
 import com.sdone.createdailyptw.model.FieldConstant;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static net.sumdev.projectone.database.user.UserOuterClass.Role;
@@ -53,9 +57,13 @@ public class PtwService {
         }
 
         if (testMode) {
+
+            var approvalData = approvalDataRepository.findByUuid(request.getUuid());
+            checkApprovalData(approvalData);
         }
         return result;
     }
+
 
     private static void returnNotAuthorized(HashMap<String, Object> result) {
         result.put(FieldConstant.HTTP_STATUS, HttpStatus.UNAUTHORIZED.value());
@@ -74,6 +82,20 @@ public class PtwService {
             }
         }
         return false;
+    }
+
+    private void checkApprovalData(List<ApprovalData> approvalData) {
+        var approvalDataVp = approvalData.stream().filter(data -> data.getStatus().equalsIgnoreCase(WizardStatusEnum.APPROVE.toString())
+                && data.getRole().equalsIgnoreCase("VP")).findAny();
+        var approvalDataJm =approvalData.stream().filter(data -> data.getStatus().equalsIgnoreCase(WizardStatusEnum.APPROVE.toString())
+                && data.getRole().equalsIgnoreCase("JM")).findAny();
+        var approvalDataShe = approvalData.stream().filter(data -> data.getStatus().equalsIgnoreCase(WizardStatusEnum.APPROVE.toString())
+                && data.getRole().equalsIgnoreCase("SHE")).findAny();
+
+        if(approvalDataVp.isEmpty() || approvalDataJm.isEmpty() || approvalDataShe.isEmpty()) {
+
+            throw new BadRequestException("Approval is not exist ");
+        }
     }
 }
 

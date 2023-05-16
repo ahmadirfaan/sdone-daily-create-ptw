@@ -1,7 +1,7 @@
 package com.sdone.createdailyptw.controller;
 
 import com.sdone.createdailyptw.exception.GrpcClientException;
-import com.sdone.createdailyptw.exception.InvalidDataPtwException;
+import com.sdone.createdailyptw.exception.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +45,9 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         return handleException(ex.getStatus(), ex.getReason());
     }
 
-    @ExceptionHandler(InvalidDataPtwException.class)
-    public ResponseEntity<Object> handleAuthenticationException(InvalidDataPtwException ex) {
-        logger.error("InvalidDataPtwException : ", ex);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handleAuthenticationException(BadRequestException ex) {
+        logger.error("BadRequestException : ", ex);
         return handleException(ex.getStatus(), ex.getReason());
     }
 
