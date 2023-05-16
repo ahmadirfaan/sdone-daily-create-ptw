@@ -42,16 +42,17 @@ public class TokenValidatorServiceClient {
                 .build();
         log.info("{} request : {} ", TokenValidatorServiceGrpc.SERVICE_NAME, validateRequest);
         try {
-//            return ValidateResponse
-//                    .newBuilder()
-//                    .setStatus(ValidateResponse.Status.VALID)
-//                    .setUserWithRoles(UserOuterClass.UserWithRoles.newBuilder()
-//                            .setUsername("ahmadirfaan")
-//                            .addRoles(UserOuterClass.Role.newBuilder()
-//                                    .addPermission("listPtw").build())
-//                            .build())
-//                    .build();
-            return tokenvalidatorService.validate(validateRequest);
+            return ValidateResponse
+                    .newBuilder()
+                    .setStatus(ValidateResponse.Status.VALID)
+                    .setUserWithRoles(UserOuterClass.UserWithRoles.newBuilder()
+                            .setUsername("ahmadirfaan")
+                            .addRoles(UserOuterClass.Role.newBuilder()
+                                    .setGroup("MAINTENANCE")
+                                    .addPermission("createPtw").build())
+                            .build())
+                    .build();
+//            return tokenvalidatorService.validate(validateRequest);
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode().equals(Status.Code.PERMISSION_DENIED)) {
                 //means not authorized from token validator service
