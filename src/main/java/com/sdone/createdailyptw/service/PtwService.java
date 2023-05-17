@@ -149,22 +149,20 @@ public class PtwService {
         ptwData.setWizard(request.getWizardNo());
         ptwData.setStatus(request.getWizardStatus());
         ptwData.setUuid(request.getUuid());
+        ptwData.setUsername(userWithRoles.getUsername());
         switch (request.getWizardNo()) {
             case WIZARD_6:
                 var wizardEnam = objectMapper.readValue(request.getDataDaily().toString(), WizardEnam.class);
-                wizardEnam.setUsername(userWithRoles.getUsername());
                 var wizardEnamData = objectMapper.writeValueAsString(wizardEnam);
                 ptwData.setData(wizardEnamData);
                 break;
             case WIZARD_7:
                 var wizardTujuh = objectMapper.readValue(request.getDataDaily().toString(), WizardTujuh.class);
-                wizardTujuh.setUsername(userWithRoles.getUsername());
                 var wizardTujuhData = objectMapper.writeValueAsString(wizardTujuh);
                 ptwData.setData(wizardTujuhData);
                 break;
             case WIZARD_8:
                 var wizardDelapan = objectMapper.readValue(request.getDataDaily().toString(), WizardDelapan.class);
-                wizardDelapan.setUsername(userWithRoles.getUsername());
                 var wizardDelapanData = objectMapper.writeValueAsString(wizardDelapan);
                 ptwData.setData(wizardDelapanData);
                 break;

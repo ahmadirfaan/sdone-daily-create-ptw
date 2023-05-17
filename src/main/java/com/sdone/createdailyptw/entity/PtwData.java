@@ -34,4 +34,6 @@ public class PtwData {
 
     private Long timestamp;
 
+    private String username;
+
 }
