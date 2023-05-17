@@ -25,4 +25,7 @@ public class CreateDailyPtw {
 
     @NotNull(message = "dataDaily can't null")
     private JsonNode dataDaily;
+
+    @NotBlank(message = "tanggalDaily can't be blank")
+    private String tanggalDaily;
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -35,5 +36,7 @@ public class PtwData {
     private Long timestamp;
 
     private String username;
+
+    private LocalDate localDate;
 
 }

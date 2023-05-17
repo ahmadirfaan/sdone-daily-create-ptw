@@ -26,7 +26,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +63,8 @@ public class PtwService {
 
         var result = new HashMap<String, Object>();
 
+        LocalDate localDate = validateTanggalDaily(request.getTanggalDaily());
+
         var validateToken = tokenValidatorServiceClient.validateToken(request.getToken());
         if (validateToken.getStatus() != Status.VALID) {
             returnNotAuthorized(result);
@@ -85,7 +89,7 @@ public class PtwService {
 
             if (request.getWizardStatus() == WizardStatusEnum.SUBMIT && request.getWizardNo() ==  WizardEnum.WIZARD_7) {
                 isError = false;
-                var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), WizardEnum.WIZARD_6);
+                var wizard = ptwDataRepository.findByUuidAndAndWizardAndLocalDate(request.getUuid(), WizardEnum.WIZARD_6, localDate);
                 if (wizard.isEmpty()) {
                     throw new BadRequestException(WizardEnum.WIZARD_6 + " is not exist");
                 }
@@ -100,7 +104,7 @@ public class PtwService {
                     && request.getWizardNo() ==  WizardEnum.WIZARD_8) {
                 isError = false;
                 wizardEnumList.forEach(wizardEnum -> {
-                    var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), wizardEnum);
+                    var wizard = ptwDataRepository.findByUuidAndAndWizardAndLocalDate(request.getUuid(), wizardEnum, localDate);
                     if (wizard.isEmpty()) {
                         throw new BadRequestException(wizardEnum.name() + " is not exist");
                     }
@@ -117,7 +121,7 @@ public class PtwService {
             }
 
             try {
-                populateDbH2(request, validateToken.getUserWithRoles());
+                populateDbH2(request, validateToken.getUserWithRoles(), localDate);
             } catch (JsonProcessingException e) {
                 throw new BadRequestException("Invalid Data PTW : " + e.getMessage());
             }
@@ -142,13 +146,29 @@ public class PtwService {
         return result;
     }
 
-    private void populateDbH2(CreateDailyPtw request, UserWithRoles userWithRoles) throws JsonProcessingException {
+    private LocalDate validateTanggalDaily(String tanggalDaily) {
+        if(tanggalDaily.length() != 8) {
+            throw new BadRequestException("tanggal daily request is not date format");
+        }
+
+        var year = tanggalDaily.substring(0, 4);
+        var month = tanggalDaily.substring(4, 6);
+        var date = tanggalDaily.substring(6, 8);
+        try {
+            return LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
+        } catch (DateTimeException dateTimeException) {
+            throw new BadRequestException("tanggal daily request is not date format");
+        }
+    }
+
+    private void populateDbH2(CreateDailyPtw request, UserWithRoles userWithRoles, LocalDate date) throws JsonProcessingException {
         PtwData ptwData = new PtwData();
         long epochSecond = Instant.now().getEpochSecond();
         ptwData.setTimestamp(epochSecond);
         ptwData.setWizard(request.getWizardNo());
         ptwData.setStatus(request.getWizardStatus());
         ptwData.setUuid(request.getUuid());
+        ptwData.setLocalDate(date);
         ptwData.setUsername(userWithRoles.getUsername());
         switch (request.getWizardNo()) {
             case WIZARD_6:
