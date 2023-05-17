@@ -1,9 +1,11 @@
 package com.sdone.createdailyptw.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sdone.createdailyptw.entity.*;
+import com.sdone.createdailyptw.entity.ApprovalData;
+import com.sdone.createdailyptw.entity.PtwData;
+import com.sdone.createdailyptw.entity.WizardEnum;
+import com.sdone.createdailyptw.entity.WizardStatusEnum;
 import com.sdone.createdailyptw.entity.wizard6.WizardEnam;
 import com.sdone.createdailyptw.entity.wizard7.WizardTujuh;
 import com.sdone.createdailyptw.entity.wizard8.WizardDelapan;
@@ -150,16 +152,19 @@ public class PtwService {
         switch (request.getWizardNo()) {
             case WIZARD_6:
                 var wizardEnam = objectMapper.readValue(request.getDataDaily().toString(), WizardEnam.class);
+                wizardEnam.setUsername(userWithRoles.getUsername());
                 var wizardEnamData = objectMapper.writeValueAsString(wizardEnam);
                 ptwData.setData(wizardEnamData);
                 break;
             case WIZARD_7:
                 var wizardTujuh = objectMapper.readValue(request.getDataDaily().toString(), WizardTujuh.class);
+                wizardTujuh.setUsername(userWithRoles.getUsername());
                 var wizardTujuhData = objectMapper.writeValueAsString(wizardTujuh);
                 ptwData.setData(wizardTujuhData);
                 break;
             case WIZARD_8:
                 var wizardDelapan = objectMapper.readValue(request.getDataDaily().toString(), WizardDelapan.class);
+                wizardDelapan.setUsername(userWithRoles.getUsername());
                 var wizardDelapanData = objectMapper.writeValueAsString(wizardDelapan);
                 ptwData.setData(wizardDelapanData);
                 break;
