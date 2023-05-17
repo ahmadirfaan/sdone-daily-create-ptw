@@ -85,16 +85,14 @@ public class PtwService {
 
             if (request.getWizardStatus() == WizardStatusEnum.SUBMIT && request.getWizardNo() ==  WizardEnum.WIZARD_7) {
                 isError = false;
-                wizardEnumList.forEach(wizardEnum -> {
-                    var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), wizardEnum);
-                    if (wizard.isEmpty()) {
-                        throw new BadRequestException(wizardEnum.name() + " is not exist");
-                    }
+                var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), WizardEnum.WIZARD_6);
+                if (wizard.isEmpty()) {
+                    throw new BadRequestException(WizardEnum.WIZARD_6 + " is not exist");
+                }
 
-                    wizard.forEach(ptwData -> {
-                        ptwData.setStatus(WizardStatusEnum.SUBMIT);
-                        ptwDataRepository.save(ptwData);
-                    });
+                wizard.forEach(ptwData -> {
+                    ptwData.setStatus(WizardStatusEnum.SUBMIT);
+                    ptwDataRepository.save(ptwData);
                 });
             }
 
