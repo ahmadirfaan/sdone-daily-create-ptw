@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.sumdev.projectone.database.ptw130.Enum130.*;
 import static net.sumdev.projectone.database.ptw130.Ptw130.CreateDailyRequest;
 import static net.sumdev.projectone.database.ptw130.Ptw130.DataDaily;
 import static net.sumdev.projectone.database.user.UserOuterClass.Role;
@@ -131,7 +132,8 @@ public class PtwService {
             result.put("uuid", request.getUuid());
         } else {
             try {
-                var createDailyRequest = createRequest(request, validateToken.getUserWithRoles());
+                var wizardStatus = WizardStatus.forNumber(request.getWizardStatus().ordinal());
+                var createDailyRequest = createRequest(request, validateToken.getUserWithRoles(), wizardStatus);
                 if (createDailyRequest == null) {
                     throw new BadRequestException("Invalid WizardNo");
                 }
@@ -193,7 +195,7 @@ public class PtwService {
         ptwDataRepository.save(ptwData);
     }
 
-    private CreateDailyRequest createRequest(CreateDailyPtw request, UserWithRoles userWithRoles) throws JsonProcessingException {
+    private CreateDailyRequest createRequest(CreateDailyPtw request, UserWithRoles userWithRoles, WizardStatus wizardStatus) throws JsonProcessingException {
         long epochSecond = Instant.now().getEpochSecond();
         String uuid = request.getUuid();
         String username = userWithRoles.getUsername();
@@ -206,7 +208,8 @@ public class PtwService {
                         .setTimestamp(epochSecond)
                         .setUuid(uuid)
                         .setUsername(username)
-                        .setWizardNo(Enum130.WizardNo.WIZARD_6)
+                        .setWizardStatus(wizardStatus)
+                        .setWizardNo(WizardNo.WIZARD_6)
                         .setDataDaily(DataDaily.newBuilder()
                                 .setWizardEnam(Ptw130Wizard6.DataPtwWizardEnam.newBuilder()
                                         .setTimestamp(epochSecond)
@@ -227,8 +230,9 @@ public class PtwService {
                         .newBuilder()
                         .setTimestamp(epochSecond)
                         .setUuid(uuid)
+                        .setWizardStatus(wizardStatus)
                         .setUsername(username)
-                        .setWizardNo(Enum130.WizardNo.WIZARD_7)
+                        .setWizardNo(WizardNo.WIZARD_7)
                         .setDataDaily(DataDaily.newBuilder()
                                 .setWizardTujuh(Ptw130Wizard7.DataPtwWizardTujuh.newBuilder()
                                         .setTimestamp(epochSecond)
@@ -250,8 +254,9 @@ public class PtwService {
                         .newBuilder()
                         .setTimestamp(epochSecond)
                         .setUuid(uuid)
+                        .setWizardStatus(wizardStatus)
                         .setUsername(username)
-                        .setWizardNo(Enum130.WizardNo.WIZARD_8)
+                        .setWizardNo(WizardNo.WIZARD_8)
                         .setDataDaily(DataDaily.newBuilder()
                                 .setWizardDelapan(Ptw130Wizard8.DataPtwWizardDelapan.newBuilder()
                                         .setTimestamp(epochSecond)
