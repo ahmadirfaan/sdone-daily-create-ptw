@@ -98,6 +98,22 @@ public class PtwService {
                 });
             }
 
+            if ((request.getWizardStatus() == WizardStatusEnum.APPROVE || request.getWizardStatus() == WizardStatusEnum.DECLINE)
+                    && request.getWizardNo() ==  WizardEnum.WIZARD_8) {
+                isError = false;
+                wizardEnumList.forEach(wizardEnum -> {
+                    var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), wizardEnum);
+                    if (wizard.isEmpty()) {
+                        throw new BadRequestException(wizardEnum.name() + " is not exist");
+                    }
+
+                    wizard.forEach(ptwData -> {
+                        ptwData.setStatus(request.getWizardStatus());
+                        ptwDataRepository.save(ptwData);
+                    });
+                });
+            }
+
             if (isError) {
                 throw new BadRequestException("Not valid wizardNo and wizardStatus");
             }
