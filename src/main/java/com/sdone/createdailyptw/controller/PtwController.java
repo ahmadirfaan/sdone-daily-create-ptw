@@ -5,10 +5,7 @@ import com.sdone.createdailyptw.model.FieldConstant;
 import com.sdone.createdailyptw.service.PtwService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -20,7 +17,7 @@ public class PtwController {
     @Autowired
     private PtwService ptwService;
 
-    @GetMapping("/v1/ptw/daily/create")
+    @PostMapping("/v1/ptw/daily/create")
     public ResponseEntity<Map<String, Object>> getPtwList(@RequestBody @Valid CreateDailyPtw createDailyPtw) {
         var result = ptwService.createDailyPtw(createDailyPtw);
         var httpStatus = (Integer) result.get(FieldConstant.HTTP_STATUS);
