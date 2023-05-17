@@ -11,7 +11,7 @@
 	<groupId>com.sdone</groupId>
 	<artifactId>create-daily-ptw</artifactId>
 	<version>1.0.0</version>
-	<name>create daily ptw</name>
+	<name>Create Daily Ptw</name>
 	<description>This is project sdone for create daily ptw</description>
 	<properties>
 		<java.version>11</java.version>
@@ -93,7 +93,12 @@
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src/main</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<extensions>
 			<extension>
 				<groupId>kr.motd.maven</groupId>
@@ -159,7 +164,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.sdone.createdailyptw.GetListPtwApplication</mainClass>
+							<mainClass>com.sdone.createdailyptw.CreateDailyPtwApplication</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>res/</Class-Path>
