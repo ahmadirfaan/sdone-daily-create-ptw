@@ -79,16 +79,16 @@ public class PtwService {
             checkApprovalData(approvalData);
             var isError = true;
             List<WizardEnum> wizardEnumList = List.of(WizardEnum.WIZARD_6, WizardEnum.WIZARD_7);
-            if (request.getWizardStatus() == WizardStatusEnum.DRAFT && wizardEnumList.contains(request.getWizardNo())) {
+            if (request.getWizardStatus() == WizardStatusEnum.DRAFT && request.getWizardNo() == WizardEnum.WIZARD_6) {
                 isError = false;
             }
 
-            if (request.getWizardStatus() == WizardStatusEnum.SUBMIT && request.getWizardNo() == WizardEnum.WIZARD_8) {
+            if (request.getWizardStatus() == WizardStatusEnum.SUBMIT && request.getWizardNo() ==  WizardEnum.WIZARD_7) {
                 isError = false;
                 wizardEnumList.forEach(wizardEnum -> {
                     var wizard = ptwDataRepository.findByUuidAndAndWizard(request.getUuid(), wizardEnum);
                     if (wizard.isEmpty()) {
-                        throw new BadRequestException(wizardEnum.name() + " is not exist with status DRAFT");
+                        throw new BadRequestException(wizardEnum.name() + " is not exist");
                     }
 
                     wizard.forEach(ptwData -> {
