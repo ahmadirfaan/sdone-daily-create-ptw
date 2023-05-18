@@ -75,7 +75,7 @@ public class PtwService {
         String permission = "createPtw";
         String group = "MAINTENANCE";
         if(WizardEnum.WIZARD_8 == request.getWizardNo()) {
-            permission = "createPtw";
+            permission = "approveDaily";
             group = "OCC";
         }
         var isPermissionValid = checkPermissionRoles(validateToken.getUserWithRoles(), group, permission);
