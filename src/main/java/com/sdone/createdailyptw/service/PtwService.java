@@ -72,7 +72,13 @@ public class PtwService {
             return result;
         }
 
-        var isPermissionValid = checkPermissionRoles(validateToken.getUserWithRoles());
+        String permission = "createPtw";
+        String group = "MAINTENANCE";
+        if(WizardEnum.WIZARD_8 == request.getWizardNo()) {
+            permission = "createPtw";
+            group = "OCC";
+        }
+        var isPermissionValid = checkPermissionRoles(validateToken.getUserWithRoles(), group, permission);
         if (!isPermissionValid) {
             returnNotAuthorized(result);
             return result;
@@ -284,17 +290,17 @@ public class PtwService {
     }
 
 
-    private boolean checkPermissionRoles(UserWithRoles userWithRoles) {
+    private boolean checkPermissionRoles(UserWithRoles userWithRoles, String grouValid, String permissionValid) {
         var isAllowedRole = false;
         var isAllowedPermission = false;
         for (int i = 0; i < userWithRoles.getRolesList().size(); i++) {
             Role roles = userWithRoles.getRoles(i);
             if (!isAllowedRole) {
-                isAllowedRole = roles.getGroup().equalsIgnoreCase("MAINTENANCE");
+                isAllowedRole = roles.getGroup().equalsIgnoreCase(grouValid);
             }
             for (String permission : roles.getPermissionList()) {
                 if (!isAllowedPermission) {
-                    isAllowedPermission = permission.equals("createPtw");
+                    isAllowedPermission = permission.equals(permissionValid);
                 }
             }
 
